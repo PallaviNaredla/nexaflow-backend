@@ -1,7 +1,12 @@
-*.class
-*.log
-*.iml
+# IntelliJ
 .idea/
+*.iml
 out/
-target/
-/bin/
+
+# OS files
+desktop.ini
+.DS_Store
+
+# Eclipse files
+.classpath
+.project
