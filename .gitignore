@@ -1,12 +1,13 @@
 # IntelliJ
 .idea/
-*.iml
-out/
 
-# OS files
-desktop.ini
-.DS_Store
+# Build folders
+bin/
+out/
 
 # Eclipse files
 .classpath
 .project
+
+# OS files
+desktop.ini
