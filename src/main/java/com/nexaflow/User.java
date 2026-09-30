@@ -10,7 +10,9 @@
             this.email = email;
             this.age = age;
         }
-
+        public String getName(){
+            return name;
+        }
         public void displayDetails() {
             System.out.println("User Details:");
             System.out.println("Name: " + name);

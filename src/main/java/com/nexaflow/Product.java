@@ -10,6 +10,9 @@ public class Product {
         this.price = price;
         this.quantity = quantity;
     }
+    public String getProductName() { return productName; }
+    public double getPrice() { return price; }
+    public int getQuantity() { return quantity; }
 
     public double calculateTotal() {
         return price * quantity;
@@ -23,3 +26,4 @@ public class Product {
         System.out.println("Total Price: " + calculateTotal());
     }
 }
+
