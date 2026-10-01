@@ -1,4 +1,8 @@
 package com.nexaflow;
+import com.nexaflow.Order;
+import com.nexaflow.Product;
+import com.nexaflow.User;
+import com.nexaflow.service.OrderService;
 
 public class Main {
     public static void main(String[] args) {
@@ -12,6 +16,10 @@ public class Main {
 
         Order order = new Order(user, products);
 
-        order.displayOrderDetails();
+        // 🔹 Service layer
+        OrderService orderService = new OrderService();
+
+        orderService.createOrder(order);
+        orderService.displayOrder(order);
     }
 }
