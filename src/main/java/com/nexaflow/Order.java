@@ -1,31 +1,37 @@
 package com.nexaflow;
 
+import java.util.List;
+
 public class Order {
 
+    private static int counter = 1;
+    private int orderId;
     private User user;
-    private Product[] products;
-    public Order(User user, Product[] products) {
+    private List<Product> products;
+
+    public Order(User user, List<Product> products) {
+        this.orderId = counter++;
         this.user = user;
         this.products = products;
     }
-    //total price
+
+    public int getOrderId() {
+        return orderId;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public List<Product> getProducts() {
+        return products;
+    }
+
     public double calculateTotal() {
         double total = 0;
         for (Product product : products) {
             total += product.calculateTotal();
         }
         return total;
-    }
-    //order details
-    public void displayOrderDetails() {
-        System.out.println("\nOrder Details:");
-        System.out.println("User: " + user.getName());
-        System.out.println("\nProducts:");
-        for (Product product : products) {
-            System.out.println("- " + product.getProductName() +
-                    " | Price: " + product.getPrice() +
-                    " | Qty: " + product.getQuantity());
-        }
-        System.out.println("\nTotal Order Price: " + calculateTotal());
     }
 }

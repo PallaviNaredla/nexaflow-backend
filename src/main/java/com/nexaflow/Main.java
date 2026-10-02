@@ -1,25 +1,36 @@
 package com.nexaflow;
-import com.nexaflow.Order;
-import com.nexaflow.Product;
-import com.nexaflow.User;
+
 import com.nexaflow.service.OrderService;
+import java.util.Arrays;
+import java.util.List;
 
 public class Main {
     public static void main(String[] args) {
 
-        User user = new User("Pallavi", "pallavi@gmail.com", 21);
+        // Users
+        User user1 = new User("Pallavi", "pallavi@gmail.com", 21);
+        User user2 = new User("Ravi", "ravi@gmail.com", 25);
 
+        // Products
         Product p1 = new Product("Laptop", 75000, 1);
-        Product p2 = new Product("Phone", 20000, 2);
+        Product p2 = new Product("Mouse", 500, 2);
+        Product p3 = new Product("Keyboard", 1500, 1);
 
-        Product[] products = {p1, p2};
+        // Orders
+        List<Product> list1 = Arrays.asList(p1, p2);
+        List<Product> list2 = Arrays.asList(p3);
 
-        Order order = new Order(user, products);
+        Order order1 = new Order(user1, list1);
+        Order order2 = new Order(user2, list2);
 
-        // 🔹 Service layer
-        OrderService orderService = new OrderService();
+        // Service
+        OrderService service = new OrderService();
 
-        orderService.createOrder(order);
-        orderService.displayOrder(order);
+        service.createOrder(order1);
+        service.createOrder(order2);
+
+        service.displayAllOrders();
+
+        service.findOrderById(1);
     }
 }
