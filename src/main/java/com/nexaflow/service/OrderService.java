@@ -11,35 +11,55 @@ public class OrderService {
     // Create Order
     public void createOrder(Order order) {
         orders.add(order);
-        System.out.println("Order Created with ID: " + order.getOrderId());
     }
 
-    // Display All Orders
+    // Display all orders
     public void displayAllOrders() {
         for (Order order : orders) {
-            System.out.println("\nOrder ID: " + order.getOrderId());
-            System.out.println("User: " + order.getUser().getName());
-
-            System.out.println("Products:");
-            order.getProducts().forEach(p ->
-                    System.out.println("- " + p.getProductName() +
-                            " | Price: " + p.getPrice() +
-                            " | Qty: " + p.getQuantity())
-            );
-
-            System.out.println("Total: " + order.calculateTotal());
+            order.displayOrderDetails();
         }
     }
 
-    // Find Order by ID
-    public void findOrderById(int id) {
+    // Find order by ID
+    public Order findOrderById(int id) {
         for (Order order : orders) {
             if (order.getOrderId() == id) {
-                System.out.println("Order Found: ID " + id);
-                System.out.println("Total: " + order.calculateTotal());
-                return;
+                System.out.println("Order Found:");
+                order.displayOrderDetails();
+                return order;
             }
         }
-        System.out.println("Order not found!");
+        System.out.println("Order not found");
+        return null;
+    }
+
+    // ✅ DELETE ORDER (you were missing this)
+    public void deleteOrder(int id) {
+        Order found = null;
+
+        for (Order order : orders) {
+            if (order.getOrderId() == id) {
+                found = order;
+                break;
+            }
+        }
+
+        if (found != null) {
+            orders.remove(found);
+            System.out.println("Order deleted successfully");
+        } else {
+            System.out.println("Order not found");
+        }
+    }
+
+    // ✅ TOTAL REVENUE (you were missing this)
+    public double getTotalRevenue() {
+        double total = 0;
+
+        for (Order order : orders) {
+            total += order.calculateTotal();
+        }
+
+        return total;
     }
 }
