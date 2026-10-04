@@ -25,8 +25,15 @@ public class Main {
         System.out.println("Initial cart size: " + cart1.getProducts().size());
 
         // 🔹 Add products manually (temporary for testing)
-        cart1.getProducts().add(p1);
-        cart1.getProducts().add(p2);
+
+        cart1.addProduct(p1);
+        cart1.addProduct(p2);
+        cart1.displayCart();
+
+        cart1.removeProduct(p2);
+
+        System.out.println("\nAfter removing one product:");
+        cart1.displayCart();
 
         System.out.println("Cart size after adding products: " + cart1.getProducts().size());
 
