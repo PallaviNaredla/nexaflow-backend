@@ -11,24 +11,29 @@ public class Cart {
     // Constructor
     public Cart(User user) {
         this.user = user;
-        this.products = new ArrayList<>(); // start with empty cart
+        this.products = new ArrayList<>();
     }
 
-    // Getter for user
+    // Getters
     public User getUser() {
         return user;
     }
 
-    // Getter for products
     public List<Product> getProducts() {
         return products;
     }
+
+    // Add product
     public void addProduct(Product product) {
         products.add(product);
     }
+
+    // Remove product
     public void removeProduct(Product product) {
         products.remove(product);
     }
+
+    // Calculate total
     public double calculateCartTotal() {
         double total = 0;
 
@@ -38,8 +43,15 @@ public class Cart {
 
         return total;
     }
+
+    // Display cart
     public void displayCart() {
         System.out.println("\nCart for: " + user.getName());
+
+        if (products.isEmpty()) {
+            System.out.println("Cart is empty");
+            return;
+        }
 
         for (Product product : products) {
             System.out.println("- " + product.getProductName() +
@@ -48,5 +60,24 @@ public class Cart {
         }
 
         System.out.println("Total Cart Value: " + calculateCartTotal());
+    }
+
+    // ✅ Checkout (CORE FEATURE)
+    public Order checkout() {
+
+        if (products.isEmpty()) {
+            System.out.println("Cart is empty. Cannot checkout.");
+            return null;
+        }
+
+        // Convert Cart → Order
+        Order order = new Order(user, new ArrayList<>(products));
+
+        // Clear cart
+        products.clear();
+
+        System.out.println("\nCheckout successful. Order created.");
+
+        return order;
     }
 }
