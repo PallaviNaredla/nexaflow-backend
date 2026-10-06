@@ -2,61 +2,154 @@ package com.nexaflow;
 
 import com.nexaflow.service.OrderService;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Main {
+
     public static void main(String[] args) {
 
-        // Users
-        User user1 = new User("Pallavi", "pallavi@gmail.com", 21);
-        User user2 = new User("Ravi", "ravi@gmail.com", 25);
+        // -------------------------------
+        // CREATE USER
+        // -------------------------------
 
-        // Products
-        Product p1 = new Product("Laptop", 75000, 1);
-        Product p2 = new Product("Mouse", 500, 2);
-        Product p3 = new Product("Keyboard", 1500, 1);
+        User user = new User(
+                "Pallavi",
+                "pallavi@gmail.com",
+                21
+        );
 
-        // Cart Flow
-        Cart cart = new Cart(user1);
+        // -------------------------------
+        // CREATE PRODUCTS
+        // -------------------------------
 
-        cart.addProduct(p1);
-        cart.addProduct(p2);
+        Product laptop = new Product(
+                "Laptop",
+                75000,
+                1
+        );
 
-        cart.displayCart();
+        Product mouse = new Product(
+                "Mouse",
+                500,
+                2
+        );
 
-        // ✅ Checkout
-        Order order1 = cart.checkout();
+        Product keyboard = new Product(
+                "Keyboard",
+                1500,
+                1
+        );
 
-        // Add to service
-        OrderService service = new OrderService();
+        // -------------------------------
+        // CREATE PRODUCT LIST
+        // -------------------------------
 
-        if (order1 != null) {
-            service.createOrder(order1);
+        List<Product> products = new ArrayList<>();
+
+        products.add(laptop);
+        products.add(mouse);
+
+        // -------------------------------
+        // CREATE ORDER
+        // -------------------------------
+
+        Order order = new Order(
+                user,
+                products
+        );
+
+        // -------------------------------
+        // CREATE ORDER SERVICE
+        // -------------------------------
+
+        OrderService orderService = new OrderService();
+
+        // -------------------------------
+        // CREATE ORDER IN SERVICE
+        // -------------------------------
+
+        orderService.createOrder(order);
+
+        // -------------------------------
+        // DISPLAY INITIAL ORDER
+        // -------------------------------
+
+        System.out.println("\n===== INITIAL ORDER =====");
+
+        orderService.displayAllOrders();
+
+        // -------------------------------
+        // UPDATE PRODUCT QUANTITY
+        // -------------------------------
+
+        System.out.println("\n===== UPDATE QUANTITY =====");
+
+        orderService.updateProductQuantity(
+                order.getOrderId(),
+                "Mouse",
+                5
+        );
+
+        orderService.displayAllOrders();
+
+        // -------------------------------
+        // ADD NEW PRODUCT
+        // -------------------------------
+
+        System.out.println("\n===== ADD PRODUCT =====");
+
+        orderService.addProductToOrder(
+                order.getOrderId(),
+                keyboard
+        );
+
+        orderService.displayAllOrders();
+
+        // -------------------------------
+        // REMOVE PRODUCT
+        // -------------------------------
+
+        System.out.println("\n===== REMOVE PRODUCT =====");
+
+        orderService.removeProductFromOrder(
+                order.getOrderId(),
+                "Mouse"
+        );
+
+        orderService.displayAllOrders();
+
+        // -------------------------------
+        // FIND ORDER
+        // -------------------------------
+
+        System.out.println("\n===== FIND ORDER =====");
+
+        Order foundOrder = orderService.findOrderById(
+                order.getOrderId()
+        );
+
+        if (foundOrder != null) {
+
+            System.out.println(
+                    "Order found with ID: "
+                            + foundOrder.getOrderId()
+            );
+
+        } else {
+
+            System.out.println("Order not found.");
         }
 
-        // Check cart after checkout
-        System.out.println("\nCart after checkout:");
-        cart.displayCart();
+        // -------------------------------
+        // TOTAL REVENUE
+        // -------------------------------
 
-        // Second Order (for testing multiple orders)
-        List<Product> list2 = Arrays.asList(p3);
-        Order order2 = new Order(user2, list2);
-        service.createOrder(order2);
+        System.out.println("\n===== TOTAL REVENUE =====");
 
-        // Display Orders
-        service.displayAllOrders();
-
-        // Find Order
-        service.findOrderById(1);
-
-        // Delete Order
-        service.deleteOrder(2);
-
-        // Display again
-        service.displayAllOrders();
-
-        // Revenue
-        System.out.println("\nTotal Revenue: " + service.getTotalRevenue());
+        System.out.println(
+                "Total Revenue: "
+                        + orderService.getTotalRevenue()
+        );
     }
 }

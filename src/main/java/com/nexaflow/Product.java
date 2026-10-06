@@ -10,6 +10,9 @@ public class Product {
         this.price = price;
         this.quantity = quantity;
     }
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
+    }
     public String getProductName() { return productName; }
     public double getPrice() { return price; }
     public int getQuantity() { return quantity; }
