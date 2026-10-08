@@ -2,6 +2,8 @@ package com.nexaflow.service;
 
 import com.nexaflow.Order;
 import com.nexaflow.Product;
+import com.nexaflow.exception.InvalidProductException;
+import com.nexaflow.exception.OrderNotFoundException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,8 +14,19 @@ public class OrderService {
 
     // CREATE
     public void createOrder(Order order) {
+
+        if (order == null) {
+            throw new IllegalArgumentException(
+                    "Order cannot be null."
+            );
+        }
+
         orders.add(order);
-        System.out.println("Order created successfully. Order ID: " + order.getOrderId());
+
+        System.out.println(
+                "Order created successfully. Order ID: "
+                        + order.getOrderId()
+        );
     }
 
     // READ - Display all orders
@@ -39,47 +52,52 @@ public class OrderService {
             }
         }
 
-        return null;
+        throw new OrderNotFoundException(
+                "Order with ID " + orderId + " not found."
+        );
     }
 
     // UPDATE - Update product quantity
-    public void updateProductQuantity(int orderId, String productName, int newQuantity) {
+    public void updateProductQuantity(
+            int orderId,
+            String productName,
+            int newQuantity) {
 
         Order order = findOrderById(orderId);
 
-        if (order == null) {
-            System.out.println("Order not found.");
-            return;
-        }
-
         for (Product product : order.getProducts()) {
 
-            if (product.getProductName().equalsIgnoreCase(productName)) {
+            if (product.getProductName()
+                    .equalsIgnoreCase(productName)) {
 
                 product.setQuantity(newQuantity);
 
-                if (product.getQuantity() == newQuantity) {
-                    System.out.println(
-                            "Product quantity updated successfully."
-                    );
-                }
+                System.out.println(
+                        "Product quantity updated successfully."
+                );
 
                 return;
             }
         }
 
-        System.out.println("Product not found in the order.");
+        throw new InvalidProductException(
+                "Product '" + productName +
+                        "' not found in the order."
+        );
     }
 
-    // UPDATE - Add product to existing order
-    public void addProductToOrder(int orderId, Product product) {
+    // UPDATE - Add product
+    public void addProductToOrder(
+            int orderId,
+            Product product) {
+
+        if (product == null) {
+            throw new InvalidProductException(
+                    "Product cannot be null."
+            );
+        }
 
         Order order = findOrderById(orderId);
-
-        if (order == null) {
-            System.out.println("Order not found.");
-            return;
-        }
 
         order.getProducts().add(product);
 
@@ -88,40 +106,38 @@ public class OrderService {
         );
     }
 
-    // DELETE - Remove product from existing order
-    public void removeProductFromOrder(int orderId, String productName) {
+    // DELETE - Remove product
+    public void removeProductFromOrder(
+            int orderId,
+            String productName) {
 
         Order order = findOrderById(orderId);
-
-        if (order == null) {
-            System.out.println("Order not found.");
-            return;
-        }
 
         Product productToRemove = null;
 
         for (Product product : order.getProducts()) {
 
-            if (product.getProductName().equalsIgnoreCase(productName)) {
+            if (product.getProductName()
+                    .equalsIgnoreCase(productName)) {
+
                 productToRemove = product;
                 break;
             }
         }
 
-        if (productToRemove != null) {
+        if (productToRemove == null) {
 
-            order.getProducts().remove(productToRemove);
-
-            System.out.println(
-                    "Product removed from order successfully."
-            );
-
-        } else {
-
-            System.out.println(
-                    "Product not found in the order."
+            throw new InvalidProductException(
+                    "Product '" + productName +
+                            "' not found in the order."
             );
         }
+
+        order.getProducts().remove(productToRemove);
+
+        System.out.println(
+                "Product removed from order successfully."
+        );
     }
 
     // DELETE - Delete complete order
@@ -129,20 +145,11 @@ public class OrderService {
 
         Order order = findOrderById(orderId);
 
-        if (order != null) {
+        orders.remove(order);
 
-            orders.remove(order);
-
-            System.out.println(
-                    "Order deleted successfully."
-            );
-
-        } else {
-
-            System.out.println(
-                    "Order not found."
-            );
-        }
+        System.out.println(
+                "Order deleted successfully."
+        );
     }
 
     // Calculate total revenue
