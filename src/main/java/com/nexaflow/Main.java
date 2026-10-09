@@ -2,6 +2,7 @@ package com.nexaflow;
 
 import com.nexaflow.exception.InvalidProductException;
 import com.nexaflow.exception.OrderNotFoundException;
+import com.nexaflow.exception.ProductNotFoundException;
 import com.nexaflow.service.OrderService;
 
 import java.util.ArrayList;
@@ -11,226 +12,111 @@ public class Main {
 
     public static void main(String[] args) {
 
-        // --------------------------------
-        // CREATE USER
-        // --------------------------------
-
         User user = new User(
                 "Pallavi",
                 "pallavi@gmail.com",
                 21
         );
 
-        // --------------------------------
-        // CREATE PRODUCTS
-        // --------------------------------
-
-        Product laptop = new Product(
-                "Laptop",
-                75000,
-                1
-        );
-
-        Product mouse = new Product(
-                "Mouse",
-                500,
-                2
-        );
-
-        Product keyboard = new Product(
-                "Keyboard",
-                1500,
-                1
-        );
-
-        // --------------------------------
-        // CREATE PRODUCT LIST
-        // --------------------------------
+        Product laptop = new Product("Laptop", 75000, 1);
+        Product mouse = new Product("Mouse", 500, 2);
+        Product keyboard = new Product("Keyboard", 1500, 1);
 
         List<Product> products = new ArrayList<>();
-
         products.add(laptop);
         products.add(mouse);
 
-        // --------------------------------
-        // CREATE ORDER
-        // --------------------------------
-
-        Order order = new Order(
-                user,
-                products
-        );
-
-        // --------------------------------
-        // CREATE ORDER SERVICE
-        // --------------------------------
+        Order order = new Order(user, products);
 
         OrderService orderService = new OrderService();
 
-        // --------------------------------
         // CREATE ORDER
-        // --------------------------------
-
+        System.out.println("\n===== CREATE ORDER =====");
         orderService.createOrder(order);
 
-        // --------------------------------
-        // DISPLAY INITIAL ORDER
-        // --------------------------------
-
-        System.out.println("\n===== INITIAL ORDER =====");
-
+        // DISPLAY ORDERS
+        System.out.println("\n===== DISPLAY ORDERS =====");
         orderService.displayAllOrders();
 
-        // --------------------------------
         // UPDATE QUANTITY
-        // --------------------------------
-
         System.out.println("\n===== UPDATE QUANTITY =====");
 
-        orderService.updateProductQuantity(
-                order.getOrderId(),
-                "Mouse",
-                5
-        );
+        try {
+            orderService.updateProductQuantity(
+                    order.getOrderId(), "Mouse", 5
+            );
+        } catch (InvalidProductException
+                 | OrderNotFoundException
+                 | ProductNotFoundException e) {
+            System.out.println("Error: " + e.getMessage());
+        }
 
-        orderService.displayAllOrders();
-
-        // --------------------------------
         // ADD PRODUCT
-        // --------------------------------
-
         System.out.println("\n===== ADD PRODUCT =====");
 
-        orderService.addProductToOrder(
-                order.getOrderId(),
-                keyboard
-        );
+        try {
+            orderService.addProductToOrder(
+                    order.getOrderId(), keyboard
+            );
+        } catch (IllegalArgumentException
+                 | OrderNotFoundException e) {
+            System.out.println("Error: " + e.getMessage());
+        }
 
-        orderService.displayAllOrders();
-
-        // --------------------------------
         // REMOVE PRODUCT
-        // --------------------------------
-
         System.out.println("\n===== REMOVE PRODUCT =====");
 
-        orderService.removeProductFromOrder(
-                order.getOrderId(),
-                "Mouse"
-        );
+        try {
+            orderService.removeProductFromOrder(
+                    order.getOrderId(), "Mouse"
+            );
+        } catch (InvalidProductException
+                 | OrderNotFoundException
+                 | ProductNotFoundException e) {
+            System.out.println("Error: " + e.getMessage());
+        }
 
-        orderService.displayAllOrders();
-
-        // --------------------------------
-        // INVALID QUANTITY TEST
-        // --------------------------------
-
+        // TEST INVALID QUANTITY
         System.out.println("\n===== INVALID QUANTITY TEST =====");
 
         try {
-
-            Product invalidProduct = new Product(
-                    "Headphones",
-                    2000,
-                    0
-            );
-
+            mouse.setQuantity(0);
         } catch (InvalidProductException e) {
-
-            System.out.println(
-                    "Error: " + e.getMessage()
-            );
+            System.out.println("Error: " + e.getMessage());
         }
 
-        // --------------------------------
-        // INVALID PRICE TEST
-        // --------------------------------
-
-        System.out.println("\n===== INVALID PRICE TEST =====");
-
-        try {
-
-            Product invalidProduct = new Product(
-                    "Tablet",
-                    -5000,
-                    1
-            );
-
-        } catch (InvalidProductException e) {
-
-            System.out.println(
-                    "Error: " + e.getMessage()
-            );
-        }
-
-        // --------------------------------
-        // EMPTY PRODUCT NAME TEST
-        // --------------------------------
-
-        System.out.println("\n===== EMPTY PRODUCT NAME TEST =====");
-
-        try {
-
-            Product invalidProduct = new Product(
-                    "",
-                    1000,
-                    1
-            );
-
-        } catch (InvalidProductException e) {
-
-            System.out.println(
-                    "Error: " + e.getMessage()
-            );
-        }
-
-        // --------------------------------
-        // INVALID ORDER ID TEST
-        // --------------------------------
-
+        // TEST MISSING ORDER
         System.out.println("\n===== INVALID ORDER ID TEST =====");
 
         try {
-
             orderService.findOrderById(999);
-
         } catch (OrderNotFoundException e) {
-
-            System.out.println(
-                    "Error: " + e.getMessage()
-            );
+            System.out.println("Error: " + e.getMessage());
         }
 
-        // --------------------------------
-        // INVALID PRODUCT UPDATE TEST
-        // --------------------------------
-
-        System.out.println("\n===== INVALID PRODUCT TEST =====");
+        // TEST MISSING PRODUCT
+        System.out.println("\n===== MISSING PRODUCT TEST =====");
 
         try {
-
-            orderService.updateProductQuantity(
-                    order.getOrderId(),
-                    "Mobile",
-                    2
+            orderService.removeProductFromOrder(
+                    order.getOrderId(), "Mobile"
             );
-
-        } catch (InvalidProductException e) {
-
-            System.out.println(
-                    "Error: " + e.getMessage()
-            );
+        } catch (ProductNotFoundException
+                 | OrderNotFoundException
+                 | InvalidProductException e) {
+            System.out.println("Error: " + e.getMessage());
         }
 
-        // --------------------------------
-        // TOTAL REVENUE
-        // --------------------------------
+        // DISPLAY FINAL ORDER
+        System.out.println("\n===== FINAL ORDER =====");
+        orderService.displayAllOrders();
 
+        // REVENUE
         System.out.println("\n===== TOTAL REVENUE =====");
-
         System.out.println(
-                "Total Revenue: "
-                        + orderService.getTotalRevenue()
+                "Total Revenue: " + orderService.getTotalRevenue()
         );
+
+        System.out.println("\nProgram completed successfully.");
     }
 }

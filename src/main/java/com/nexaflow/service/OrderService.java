@@ -4,13 +4,14 @@ import com.nexaflow.Order;
 import com.nexaflow.Product;
 import com.nexaflow.exception.InvalidProductException;
 import com.nexaflow.exception.OrderNotFoundException;
+import com.nexaflow.exception.ProductNotFoundException;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class OrderService {
 
-    private List<Order> orders = new ArrayList<>();
+    private final List<Order> orders = new ArrayList<>();
 
     // CREATE
     public void createOrder(Order order) {
@@ -63,6 +64,12 @@ public class OrderService {
             String productName,
             int newQuantity) {
 
+        if (productName == null || productName.trim().isEmpty()) {
+            throw new InvalidProductException(
+                    "Product name cannot be empty."
+            );
+        }
+
         Order order = findOrderById(orderId);
 
         for (Product product : order.getProducts()) {
@@ -80,16 +87,14 @@ public class OrderService {
             }
         }
 
-        throw new InvalidProductException(
-                "Product '" + productName +
-                        "' not found in the order."
+        throw new ProductNotFoundException(
+                "Product '" + productName
+                        + "' not found in order " + orderId + "."
         );
     }
 
     // UPDATE - Add product
-    public void addProductToOrder(
-            int orderId,
-            Product product) {
+    public void addProductToOrder(int orderId, Product product) {
 
         if (product == null) {
             throw new InvalidProductException(
@@ -111,6 +116,12 @@ public class OrderService {
             int orderId,
             String productName) {
 
+        if (productName == null || productName.trim().isEmpty()) {
+            throw new InvalidProductException(
+                    "Product name cannot be empty."
+            );
+        }
+
         Order order = findOrderById(orderId);
 
         Product productToRemove = null;
@@ -126,10 +137,9 @@ public class OrderService {
         }
 
         if (productToRemove == null) {
-
-            throw new InvalidProductException(
-                    "Product '" + productName +
-                            "' not found in the order."
+            throw new ProductNotFoundException(
+                    "Product '" + productName
+                            + "' not found in order " + orderId + "."
             );
         }
 
