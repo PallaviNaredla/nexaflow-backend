@@ -3,6 +3,7 @@ package com.nexaflow.dao;
 import com.nexaflow.util.DBConnection;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class ProductDAO {
@@ -29,6 +30,37 @@ public class ProductDAO {
             int rowsInserted = ps.executeUpdate();
 
             return rowsInserted == 1;
+        }
+    }
+    public void getAllProducts() throws SQLException {
+
+        String sql = "SELECT product_id, product_name, " +
+                "price, available_quantity FROM products";
+
+        try (Connection connection = DBConnection.getConnection();
+             PreparedStatement ps = connection.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+
+            boolean found = false;
+
+            while (rs.next()) {
+                found = true;
+
+                int productId = rs.getInt("product_id");
+                String productName = rs.getString("product_name");
+                double price = rs.getDouble("price");
+                int quantity = rs.getInt("available_quantity");
+
+                System.out.println("Product ID: " + productId);
+                System.out.println("Product Name: " + productName);
+                System.out.println("Price: " + price);
+                System.out.println("Available Quantity: " + quantity);
+                System.out.println("------------------------------");
+            }
+
+            if (!found) {
+                System.out.println("No products found.");
+            }
         }
     }
 }

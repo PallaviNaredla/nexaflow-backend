@@ -11,21 +11,11 @@ public class ProductDAOTest {
         ProductDAO productDAO = new ProductDAO();
 
         try {
-            boolean result = productDAO.insertProduct(
-                    104,
-                    "Headphones",
-                    2500.00,
-                    20
-            );
-
-            if (result) {
-                System.out.println("Product inserted successfully!");
-            } else {
-                System.out.println("Product insertion failed.");
-            }
+            System.out.println("Fetching all products...");
+            productDAO.getAllProducts();
 
         } catch (SQLException e) {
-            System.out.println("Database operation failed.");
+            System.out.println("Failed to retrieve products.");
             e.printStackTrace();
         }
     }
