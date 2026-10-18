@@ -11,10 +11,10 @@ public class DBConnection {
     private static final String URL =
             "jdbc:oracle:thin:@//localhost:1521/freepdb1";
 
-
     private static final String USERNAME = "NEXAFLOW_APP";
 
     public static Connection getConnection() throws SQLException {
+
         Scanner scanner = new Scanner(System.in);
 
         System.out.print("Enter Oracle password: ");

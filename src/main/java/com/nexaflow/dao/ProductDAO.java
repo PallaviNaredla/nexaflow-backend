@@ -32,6 +32,38 @@ public class ProductDAO {
             return rowsInserted == 1;
         }
     }
+
+    public boolean updateProduct(int productId, double price, int quantity)
+            throws SQLException {
+
+        if (productId <= 0) {
+            throw new IllegalArgumentException("Product ID must be positive.");
+        }
+
+        if (price <= 0) {
+            throw new IllegalArgumentException("Price must be greater than zero.");
+        }
+
+        if (quantity < 0) {
+            throw new IllegalArgumentException("Quantity cannot be negative.");
+        }
+
+        String sql = "UPDATE products SET price = ?, available_quantity = ? "
+                + "WHERE product_id = ?";
+
+        try (Connection connection = DBConnection.getConnection();
+             PreparedStatement ps = connection.prepareStatement(sql)) {
+
+            ps.setDouble(1, price);
+            ps.setInt(2, quantity);
+            ps.setInt(3, productId);
+
+            int rowsUpdated = ps.executeUpdate();
+
+            return rowsUpdated == 1;
+        }
+    }
+
     public void getAllProducts() throws SQLException {
 
         String sql = "SELECT product_id, product_name, " +
