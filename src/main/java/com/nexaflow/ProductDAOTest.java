@@ -11,26 +11,22 @@ public class ProductDAOTest {
         ProductDAO productDAO = new ProductDAO();
 
         try {
-            System.out.println("Before update:");
+            System.out.println("Products before deletion:");
             productDAO.getAllProducts();
 
-            System.out.print("Enter Oracle password: ");
-            java.util.Scanner scanner =
-                    new java.util.Scanner(System.in);
-            String password = scanner.nextLine();
+            boolean deleted = productDAO.deleteProduct(104);
 
-            // Update product 104: Headphones
-            boolean updated = productDAO.updateProduct(
-                    104, 2800.00, 25
-            );
-
-            if (updated) {
-                System.out.println("Product updated successfully.");
+            if (deleted) {
+                System.out.println(
+                        "Product deleted successfully."
+                );
             } else {
-                System.out.println("Product ID not found.");
+                System.out.println(
+                        "Product ID not found."
+                );
             }
 
-            System.out.println("After update:");
+            System.out.println("Products after deletion:");
             productDAO.getAllProducts();
 
         } catch (SQLException e) {
@@ -38,7 +34,6 @@ public class ProductDAOTest {
             e.printStackTrace();
         } catch (IllegalArgumentException e) {
             System.out.println("Invalid input: " + e.getMessage());
-
         }
     }
 }

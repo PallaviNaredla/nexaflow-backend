@@ -64,6 +64,27 @@ public class ProductDAO {
         }
     }
 
+    public boolean deleteProduct(int productId) throws SQLException {
+
+        if (productId <= 0) {
+            throw new IllegalArgumentException(
+                    "Product ID must be positive."
+            );
+        }
+
+        String sql = "DELETE FROM products WHERE product_id = ?";
+
+        try (Connection connection = DBConnection.getConnection();
+             PreparedStatement ps = connection.prepareStatement(sql)) {
+
+            ps.setInt(1, productId);
+
+            int rowsDeleted = ps.executeUpdate();
+
+            return rowsDeleted == 1;
+        }
+    }
+
     public void getAllProducts() throws SQLException {
 
         String sql = "SELECT product_id, product_name, " +
