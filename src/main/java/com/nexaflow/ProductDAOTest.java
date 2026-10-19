@@ -12,7 +12,7 @@ public class ProductDAOTest {
 
         try {
             System.out.println("Products before deletion:");
-            productDAO.getAllProducts();
+            productDAO.getProductById(999);
 
             boolean deleted = productDAO.deleteProduct(104);
 

@@ -85,6 +85,40 @@ public class ProductDAO {
         }
     }
 
+    public void getProductById(int productId) throws SQLException {
+
+        if (productId <= 0) {
+            throw new IllegalArgumentException(
+                    "Product ID must be positive."
+            );
+        }
+
+        String sql = "SELECT product_id, product_name, price, "
+                + "available_quantity FROM products "
+                + "WHERE product_id = ?";
+
+        try (Connection connection = DBConnection.getConnection();
+             PreparedStatement ps = connection.prepareStatement(sql)) {
+
+            ps.setInt(1, productId);
+
+            try (java.sql.ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    System.out.println("Product ID: "
+                            + rs.getInt("product_id"));
+                    System.out.println("Product Name: "
+                            + rs.getString("product_name"));
+                    System.out.println("Price: "
+                            + rs.getDouble("price"));
+                    System.out.println("Available Quantity: "
+                            + rs.getInt("available_quantity"));
+                } else {
+                    System.out.println("Product not found.");
+                }
+            }
+        }
+    }
+
     public void getAllProducts() throws SQLException {
 
         String sql = "SELECT product_id, product_name, " +
