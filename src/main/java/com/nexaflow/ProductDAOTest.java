@@ -2,7 +2,6 @@
 package com.nexaflow;
 
 import com.nexaflow.dao.ProductDAO;
-
 import java.sql.SQLException;
 
 public class ProductDAOTest {
@@ -11,30 +10,33 @@ public class ProductDAOTest {
 
         ProductDAO productDAO = new ProductDAO();
 
-        // Change this to an ID that exists in your database.
-        int productId = 101;
-
         try {
-            System.out.println("Searching for product ID: "
-                    + productId);
+            // Test 1: Search by product name
+            System.out.println("TEST 1: Search for Laptop");
+            productDAO.searchProductsByName("Laptop");
 
-            Product product =
-                    productDAO.getProductById(productId);
+            // Test 2: Case-insensitive search
+            System.out.println("\nTEST 2: Search using uppercase");
+            productDAO.searchProductsByName("LAPTOP");
 
-            if (product != null) {
-                System.out.println("Product found!");
-                product.displayProduct();
-            } else {
-                System.out.println("Product not found.");
+            // Test 3: Search for a product that does not exist
+            System.out.println("\nTEST 3: Search for unknown product");
+            productDAO.searchProductsByName("XYZUnknown");
+
+            // Test 4: Validate empty search input
+            System.out.println("\nTEST 4: Search with empty keyword");
+
+            try {
+                productDAO.searchProductsByName("   ");
+            } catch (IllegalArgumentException e) {
+                System.out.println(
+                        "Validation successful: " + e.getMessage()
+                );
             }
 
         } catch (SQLException e) {
             System.out.println("Database operation failed.");
             e.printStackTrace();
-
-        } catch (IllegalArgumentException e) {
-            System.out.println("Invalid input: "
-                    + e.getMessage());
         }
     }
 }

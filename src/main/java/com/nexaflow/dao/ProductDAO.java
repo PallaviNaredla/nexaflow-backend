@@ -40,6 +40,49 @@ public class ProductDAO {
         }
     }
 
+    public void searchProductsByName(String keyword)
+            throws SQLException {
+
+        if (keyword == null || keyword.trim().isEmpty()) {
+            throw new IllegalArgumentException(
+                    "Search keyword cannot be empty."
+            );
+        }
+
+        String sql = "SELECT product_id, product_name, price, "
+                + "available_quantity FROM products "
+                + "WHERE LOWER(product_name) LIKE ?";
+
+        try (Connection connection = DBConnection.getConnection();
+             PreparedStatement ps = connection.prepareStatement(sql)) {
+
+            ps.setString(1, "%" + keyword.trim().toLowerCase() + "%");
+
+            try (ResultSet rs = ps.executeQuery()) {
+
+                boolean found = false;
+
+                while (rs.next()) {
+                    found = true;
+
+                    System.out.println("Product ID: "
+                            + rs.getInt("product_id"));
+                    System.out.println("Product Name: "
+                            + rs.getString("product_name"));
+                    System.out.println("Price: "
+                            + rs.getDouble("price"));
+                    System.out.println("Available Quantity: "
+                            + rs.getInt("available_quantity"));
+                    System.out.println("------------------------------");
+                }
+
+                if (!found) {
+                    System.out.println("No matching products found.");
+                }
+            }
+        }
+    }
+
     // READ: Retrieve all products
     public void getAllProducts() throws SQLException {
 
